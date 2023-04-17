@@ -82,9 +82,6 @@ const GameControler = (() => {
 	};
 
 	return {
-		playerOne,
-		playerTwo,
-		switchPlayer,
 		gameRound,
 		endOfTheGame,
 	};
