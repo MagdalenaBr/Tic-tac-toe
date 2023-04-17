@@ -1,0 +1,42 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #344e41;
+}
+main {
+	margin-inline: 2rem;
+}
+.title {
+	padding: 2rem;
+	text-align: center;
+	font-size: 4rem;
+	color: #dad7cd;
+	font-family: "Permanent Marker", cursive;
+}
+
+.grid-border {
+	margin: 0 auto;
+	margin-top: 3rem;
+	max-width: 40rem;
+
+	background-color: #dad7cd;
+}
+.game-board {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(200px, 300px));
+	grid-gap: 2px;
+}
+.field {
+	height: 6rem;
+	color: #dad7cd;
+	text-align: center;
+	font-size: 4rem;
+	padding: 10px;
+	background-color: #344e41;
+	cursor: pointer;
+	border: none;
+}
