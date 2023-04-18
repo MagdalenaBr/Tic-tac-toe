@@ -10,15 +10,22 @@ const gameBoard = (() => {
 		if (i > board.length) return;
 		return board[i];
 	};
+	const boardReset = () => {
+		board.map((_, i) => {
+			board[i] = "";
+		});
+	};
 	return {
 		board,
 		getField,
 		setField,
+		boardReset,
 	};
 })();
 
 const Player = marker => {
 	this.marker = marker;
+
 	const setMarker = () => marker;
 	return {
 		setMarker,
@@ -26,8 +33,8 @@ const Player = marker => {
 };
 
 const GameControler = (() => {
-	const playerOne = Player("O");
-	const playerTwo = Player("X");
+	const playerOne = Player("X");
+	const playerTwo = Player("O");
 	let round = 1;
 	let gameOver = false;
 	const gameRound = fieldIndex => {
@@ -35,11 +42,14 @@ const GameControler = (() => {
 		if (checkWin()) {
 			console.log("win");
 			gameOver = true;
+			ScreenControler.displayEndMessage(`The Winner is '${switchPlayer()}'`);
 		}
 		if (!checkWin() && checkDraw()) {
 			console.log("draw");
+			ScreenControler.displayEndMessage("It's a draw");
 		}
 		round++;
+		ScreenControler.displayPlayersTurn(`'${switchPlayer()}' turn`);
 	};
 
 	const switchPlayer = () => {
@@ -57,18 +67,6 @@ const GameControler = (() => {
 			[0, 4, 8],
 			[2, 4, 6],
 		];
-
-		// for (const condition of winningConditions) {
-		// 	let [a, b, c] = condition;
-		// 	if (
-		// 		gameBoard.getField(a) &&
-		// 		gameBoard.getField(a) == gameBoard.getField(b) &&
-		// 		gameBoard.getField(b) == gameBoard.getField(c)
-		// 	) {
-		// 		return [a, b, c];
-		// 	}
-		// }
-		// console.log()
 		return winningConditions.some(condition =>
 			condition.every(cell => gameBoard.board[cell] === switchPlayer())
 		);
@@ -80,17 +78,22 @@ const GameControler = (() => {
 	const endOfTheGame = () => {
 		return gameOver;
 	};
-
+	const resetGame = () => {
+		round = 1;
+		gameOver = false;
+	};
 	return {
+		resetGame,
+		switchPlayer,
 		gameRound,
 		endOfTheGame,
 	};
 })();
 
 const ScreenControler = (() => {
-	const fields = [...document.querySelectorAll(".field")];
+	const fields = [...document.querySelectorAll(".game-board__field")];
 	const insertMark = e => {
-		if (GameControler.endOfTheGame()) return;
+		if (GameControler.endOfTheGame() || e.target.textContent !== "") return;
 		GameControler.gameRound(e.target.dataset.index);
 		updateGame();
 	};
@@ -99,8 +102,41 @@ const ScreenControler = (() => {
 			fields[i].textContent = gameBoard.getField(i);
 		}
 	};
-
 	fields.forEach(field => {
-		field.addEventListener("click", insertMark, { once: true });
+		field.addEventListener("click", insertMark);
 	});
+	/////////////////////////////////////////////////////////////////////////////
+	const startBtn = document.querySelector(".start-window__btn");
+	const playerTurn = document.querySelector(".player-turn");
+	const endWindow = document.querySelector(".end-window");
+	const displayPlayersTurn = message => {
+		playerTurn.textContent = message;
+	};
+	const displayEndMessage = message => {
+		const endMessage = document.querySelector(".end-window__message");
+		endWindow.style.display = "flex";
+		endMessage.textContent = message;
+	};
+
+	startBtn.addEventListener("click", function (e) {
+		const startWindow = document.querySelector(".start-window");
+		e.preventDefault();
+		startWindow.classList.add("disabled");
+		startBtn.style.display = "none";
+		playerTurn.style.display = "block";
+	});
+
+	const restartBtn = document.querySelector(".end-window__restart-btn");
+	restartBtn.addEventListener("click", function () {
+		GameControler.resetGame();
+		gameBoard.boardReset();
+		endWindow.style.display = "none";
+		ScreenControler.displayPlayersTurn(`'X' turn`);
+		updateGame();
+	});
+	return {
+		displayPlayersTurn,
+		displayEndMessage,
+	};
 })();
+

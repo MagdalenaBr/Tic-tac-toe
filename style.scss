@@ -3,40 +3,128 @@
 	padding: 0;
 	box-sizing: border-box;
 }
-
+:root {
+	--main-color: #344e41;
+	--text-color: #dad7cd;
+	--btn-text-color: #588157;
+	--accent-color: #d4a373;
+}
 body {
-	background-color: #344e41;
+	background-color: var(--main-color);
 }
 main {
-	margin-inline: 2rem;
-}
-.title {
-	padding: 2rem;
-	text-align: center;
-	font-size: 4rem;
-	color: #dad7cd;
-	font-family: "Permanent Marker", cursive;
+	display: grid;
+	grid-template-rows: 1fr 1fr 1fr;
 }
 
 .grid-border {
+	grid-row: 2/3;
 	margin: 0 auto;
-	margin-top: 3rem;
 	max-width: 40rem;
-
-	background-color: #dad7cd;
+	background-color: var(--text-color);
 }
 .game-board {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(200px, 300px));
 	grid-gap: 2px;
+	&__field {
+		height: 6rem;
+		padding: 10px;
+		font-size: 4rem;
+		text-align: center;
+		border: none;
+		color: var(--accent-color);
+		background-color: var(--main-color);
+		cursor: pointer;
+	
+	}
 }
-.field {
-	height: 6rem;
-	color: #dad7cd;
+.end-window,
+.start-window {
+	position: fixed;
+	width: 100vw;
+	height: 90vh;
 	text-align: center;
-	font-size: 4rem;
-	padding: 10px;
-	background-color: #344e41;
+}
+.start-window {
+	background-color: var(--main-color);
+	&__content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		height: 100%;
+	}
+	&__title {
+		text-align: center;
+		font-size: 5.5rem;
+		font-family: "Permanent Marker", cursive;
+		color: var(--text-color);
+	}
+	&__btn {
+		border: 3px solid var(--btn-text-color);
+		background-color: var(--text-color);
+		color: var(--btn-text-color);
+	}
+
+	// &__player-name {
+	// 	font-size: 1.2rem;
+	// 	margin-inline: 2rem;
+	// 	margin-block: 4rem 3rem;
+	// 	padding: 0.5rem 1.5rem;
+	// 	// border: 3px solid var(--btn-text-color);
+	// 	background-color: var(--btn-text-color);
+	// 	color: var(--text-color);
+	// 	border: 3px solid var(--text-color);
+	// 	border-radius: 15px;
+	// }
+}
+.start-window__btn,
+.end-window__restart-btn {
+	padding: 1rem 2rem;
+	font-size: 1.3rem;
+	font-weight: 700;
+	border-radius: 15px;
+	text-transform: uppercase;
 	cursor: pointer;
-	border: none;
+}
+::placeholder {
+	color: var(--text-color);
+}
+.disabled {
+	position: static;
+	grid-row: 1/2;
+	text-align: center;
+	width: auto;
+	height: auto;
+	background-color: var(--main-color);
+	
+}
+.player-turn {
+	display: none;
+	margin-top: 1rem;
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--accent-color);
+	text-transform: uppercase;
+}
+.end-window {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #344e41b2;
+	backdrop-filter: blur(5px);
+	&__message {
+		font-size: 3rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: var(--accent-color);
+	}
+	&__restart-btn {
+		margin-top: 1rem;
+		border: none;
+		background-color: var(--accent-color);
+		color: var(--main-color);
+	}
 }
