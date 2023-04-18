@@ -5,7 +5,6 @@ const gameBoard = (() => {
 		if (i > board.length) return;
 		board[i] = marker;
 	};
-
 	const getField = i => {
 		if (i > board.length) return;
 		return board[i];
@@ -25,7 +24,6 @@ const gameBoard = (() => {
 
 const Player = marker => {
 	this.marker = marker;
-
 	const setMarker = () => marker;
 	return {
 		setMarker,
@@ -51,11 +49,9 @@ const GameControler = (() => {
 		round++;
 		ScreenControler.displayPlayersTurn(`'${switchPlayer()}' turn`);
 	};
-
 	const switchPlayer = () => {
 		return round % 2 === 1 ? playerOne.setMarker() : playerTwo.setMarker();
 	};
-
 	const checkWin = () => {
 		const winningConditions = [
 			[0, 1, 2],
@@ -71,7 +67,6 @@ const GameControler = (() => {
 			condition.every(cell => gameBoard.board[cell] === switchPlayer())
 		);
 	};
-
 	const checkDraw = () => {
 		return !gameBoard.board.includes("");
 	};
@@ -92,6 +87,10 @@ const GameControler = (() => {
 
 const ScreenControler = (() => {
 	const fields = [...document.querySelectorAll(".game-board__field")];
+	const startBtn = document.querySelector(".start-window__btn");
+	const playerTurn = document.querySelector(".player-turn");
+	const endWindow = document.querySelector(".end-window");
+	const restartBtn = document.querySelector(".end-window__restart-btn");
 	const insertMark = e => {
 		if (GameControler.endOfTheGame() || e.target.textContent !== "") return;
 		GameControler.gameRound(e.target.dataset.index);
@@ -102,13 +101,6 @@ const ScreenControler = (() => {
 			fields[i].textContent = gameBoard.getField(i);
 		}
 	};
-	fields.forEach(field => {
-		field.addEventListener("click", insertMark);
-	});
-	/////////////////////////////////////////////////////////////////////////////
-	const startBtn = document.querySelector(".start-window__btn");
-	const playerTurn = document.querySelector(".player-turn");
-	const endWindow = document.querySelector(".end-window");
 	const displayPlayersTurn = message => {
 		playerTurn.textContent = message;
 	};
@@ -117,26 +109,28 @@ const ScreenControler = (() => {
 		endWindow.style.display = "flex";
 		endMessage.textContent = message;
 	};
-
-	startBtn.addEventListener("click", function (e) {
-		const startWindow = document.querySelector(".start-window");
-		e.preventDefault();
-		startWindow.classList.add("disabled");
-		startBtn.style.display = "none";
-		playerTurn.style.display = "block";
-	});
-
-	const restartBtn = document.querySelector(".end-window__restart-btn");
-	restartBtn.addEventListener("click", function () {
+	const restartGame = () => {
 		GameControler.resetGame();
 		gameBoard.boardReset();
 		endWindow.style.display = "none";
 		ScreenControler.displayPlayersTurn(`'X' turn`);
 		updateGame();
+	};
+	const startGame = e => {
+		const startWindow = document.querySelector(".start-window");
+		e.preventDefault();
+		startWindow.classList.add("disabled");
+		startBtn.style.display = "none";
+		playerTurn.style.display = "block";
+	};
+
+	startBtn.addEventListener("click", startGame);
+	restartBtn.addEventListener("click", restartGame);
+	fields.forEach(field => {
+		field.addEventListener("click", insertMark);
 	});
 	return {
 		displayPlayersTurn,
 		displayEndMessage,
 	};
 })();
-
